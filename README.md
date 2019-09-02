@@ -25,3 +25,25 @@ helm init --history-max 200 --service-account tiller
 ```bash
 kubectl get pod -n kube-system | grep tiller
 ```
+
+### レポジトリの登録
+Helm は、stable チャートをデフォルトで登録しているが、Kafka はまだ incubator なので、
+レポジトリを登録する。
+```bash
+helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+```
+
+### レポジトリの確認
+```bash
+helm repo list
+```
+
+### 名前空間を作る
+```bash
+kubectl create ns kafka
+```
+
+### 標準構成でのデプロイ
+```bash
+helm install --name my-kafka --namespace kafka incubator/kafka
+```
