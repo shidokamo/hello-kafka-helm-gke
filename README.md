@@ -68,4 +68,45 @@ helm list
 helm delete my-kafka
 ```
 
-### Kafka を使う
+## Kafka のテスト
+まず、kafka の pod 名とポート番号を確認する。
+
+```
+$ kubectl get pod,svc -n kafka
+NAME                       READY   STATUS    RESTARTS   AGE
+pod/my-kafka-0             1/1     Running   1          50m
+pod/my-kafka-zookeeper-0   1/1     Running   0          50m
+pod/my-kafka-zookeeper-1   1/1     Running   0          49m
+pod/my-kafka-zookeeper-2   1/1     Running   0          48m
+
+NAME                                  TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
+service/my-kafka                      ClusterIP   10.27.240.3    <none>        9092/TCP                     50m
+service/my-kafka-headless             ClusterIP   None           <none>        9092/TCP                     50m
+service/my-kafka-zookeeper            ClusterIP   10.27.245.36   <none>        2181/TCP                     50m
+service/my-kafka-zookeeper-headless   ClusterIP   None           <none>        2181/TCP,3888/TCP,2888/TCP   50m
+```
+
+`my-kafka-0` の 9092 番ポートを localhost にフォワードする。
+
+```
+kubectl -n kafka port-forward my-kafka-0 9092
+```
+
+`kafkacat` というユーティリティツールがなければインストールする。
+
+```
+sudo apt-get install -y kafkacat
+```
+
+なんらかのログファイル（一定間隔で追記されているものが望ましい）をトピックに投げる。
+ログローテートを使っている可能性も考慮して `tail` には、`-F` オプションをつけるのが望ましい。
+
+```
+tail -F ./your_appending.log | kafkacat -P -t your_topic_name -b localhost:9092
+```
+
+トピックをサブスクライブする。うまくデプロイができていれば、メッセージを受信する様子が確認できます。
+
+```
+kafkacat -C -t your_topic_name -b localhost:9092
+```
