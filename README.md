@@ -1,4 +1,4 @@
-# Hello Kafka on GKE
+# Hello Kafka on GKE with Helm
 Kafka を GKE にデプロイするサンプルです
 
 * https://github.com/Yolean/kubernetes-kafka
@@ -14,4 +14,14 @@ gcloud container cluster create kafka --disk-size=100 --machine-type=n1-standard
 ### Tiller のサービスアカウントの作成
 ```bash
 kubectl apply -f create-helm-service-account.yaml
+```
+
+### Tiller のデプロイ
+```bash
+helm init --history-max 200 --service-account tiller
+```
+
+### Tiller の確認
+```bash
+kubectl get pod -n kube-system | grep tiller
 ```
