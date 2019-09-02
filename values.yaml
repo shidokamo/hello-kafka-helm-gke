@@ -17,7 +17,8 @@ imagePullPolicy: "IfNotPresent"
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-resources: {}
+# resources: {}
+resources:
   limits:
     cpu: 200m
     memory: 1536Mi
@@ -69,7 +70,7 @@ logSubPath: "logs"
 ## Pod scheduling preferences (by default keep pods within a release on separate nodes).
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ## By default we don't set affinity
-affinity: {}
+## affinity: {}
 ## Alternatively, this typical example defines:
 ## antiAffinity (to keep Kafka pods on separate pods)
 ## and affinity (to encourage Kafka pods to be collocated with Zookeeper pods)
