@@ -47,3 +47,25 @@ kubectl create ns kafka
 ```bash
 helm install --name my-kafka --namespace kafka incubator/kafka
 ```
+
+### カスタム構成でのデプロイ
+```bash
+helm install --name my-kafka --namespace kafka -f values.yaml incubator/kafka
+```
+
+### Pod/Service の確認
+```bash
+kubectl get pod,svc -n kafka
+```
+
+### Helm のリリース確認
+```bash
+helm list
+```
+
+### リリースの削除
+```bash
+helm delete my-kafka
+```
+
+### Kafka を使う
