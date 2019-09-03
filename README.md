@@ -170,9 +170,23 @@ kafkacat -P -b YOUR_IP_ADDRESS:31090 -t test-topic
 kafkacat -C -b YOUR_IP_ADDRESS:31090 -t test-topic
 ```
 
-## デプロイ：NodPort で外部IPへ公開する場合（GCP推奨）
+## デプロイ：NodPort で外部IPへ公開する場合
+デプロイする。
+```
+helm install \
+  --name my-kafka \
+  --namespace kafka \
+  -f values-with-node-port.yaml \
+  incubator/kafka
+```
+
+NodePort のエントリポイントを調べる。
+```
+kubectl describe svc my-kafka-0-external -n kafka
+```
+
+この中で EndPoints の情報を調べて、以下のようにテスト
 
 ```
-  --set external.type=NodePort \
-  --set external.annotations."kubernetes\.io/ingress\.global-static-ip-name"=YOUR_IP_NAME
+kafkacat -b YOUR_ENDPOINT:31090 -L
 ```
