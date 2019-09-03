@@ -112,6 +112,8 @@ kafkacat -C -t your_topic_name -b localhost:9092
 ```
 
 ## デプロイ：LoadBalancer で外部IPへ公開する場合
+[Configuring Kafka on Kubernetes makes available from an external client with helm](https://medium.com/@tsuyoshiushio/configuring-kafka-on-kubernetes-makes-available-from-an-external-client-with-helm-96e9308ee9f4)
+
 リージョン IP アドレスを作成する
 ```
 gcloud compute addresses create YOUR_IP_NAME --region us-central1
@@ -132,7 +134,8 @@ helm install \
   incubator/kafka
 ```
 
-もしくは既存のデプロイを更新する場合は、
+理論的には、既存のデプロイ（リリース）を以下のように更新できるはずだが、
+なぜかうまくいかない。
 ```
 helm upgrade my-kafka \
   --set external.loadBalancerIP={YOUR_IP_ADDRESS} \
