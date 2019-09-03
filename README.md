@@ -48,7 +48,7 @@ kubectl create ns kafka
 helm install --name my-kafka --namespace kafka incubator/kafka
 ```
 
-### カスタム構成でのデプロイ
+## デプロイ：外部IPを使わない場合
 ```bash
 helm install --name my-kafka --namespace kafka -f values.yaml incubator/kafka
 ```
@@ -68,7 +68,7 @@ helm list
 helm delete my-kafka
 ```
 
-## Kafka のテスト
+### Kafka のテスト
 まず、kafka の pod 名とポート番号を確認する。
 
 ```
@@ -109,4 +109,27 @@ tail -F ./your_appending.log | kafkacat -P -t your_topic_name -b localhost:9092
 
 ```
 kafkacat -C -t your_topic_name -b localhost:9092
+```
+
+## デプロイ：LoadBalancer で外部IPへ公開する場合
+リージョン IP アドレスを作成する
+```
+gcloud compute addresses create YOUR_IP_NAME --region us-central1
+```
+
+リージョン IP アドレスを確認する
+```
+gcloud compute addresses describe YOUR_IP_NAME --region us-central1
+```
+
+デプロイを更新
+```
+helm install my-kafka-lb -f values.yaml --set external.loadBalancerIP=YOUR_IP_ADDRESS incubator/kafka
+```
+
+## デプロイ：NodPort で外部IPへ公開する場合（GCP推奨）
+
+```
+  --set external.type=NodePort \
+  --set external.annotations."kubernetes\.io/ingress\.global-static-ip-name"=YOUR_IP_NAME
 ```
