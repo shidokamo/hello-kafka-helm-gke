@@ -54,7 +54,7 @@ external:
   domain: cluster.local
   loadBalancerIP:
     - YOUR_IP_ADDRESS
-  externalTraficPolicy: true
+  externalTraficPolicy: Local
   init:
     image: "lwolf/kubectl_deployer"
     imageTag: "0.4"
