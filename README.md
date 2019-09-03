@@ -99,7 +99,7 @@ sudo apt-get install -y kafkacat
 ```
 
 なんらかのログファイル（一定間隔で追記されているものが望ましい）をトピックに投げる。
-ログローテートを使っている可能性も考慮して `tail` には、`-F` オプションをつけるのが望ましい。
+ログローテートを使う可能性も考慮して `tail` には、`-F` オプションをつけるのが望ましい。
 
 ```
 tail -F ./your_appending.log | kafkacat -P -t your_topic_name -b localhost:9092
@@ -148,6 +148,24 @@ helm upgrade my-kafka \
 
 ```
 kafkacat -b YOUR_IP_ADDRESS:31090 -L
+```
+
+テストクライアントを通してトピックを作成する。
+```
+kubectl apply -f test-client.yaml
+kubectl -n kafka exec -it testclient -- ./bin/kafka-topics.sh --zookeeper my-kafka-zookeeper:2181 --topic test-topic --create --partitions 3 --replication-factor 1
+```
+
+作成した topic に Publish する。以下のコマンドを打って、適当にタイプをします。
+
+```
+kafkacat -P -b YOUR_IP_ADDRESS:31090 -t test-topic
+```
+
+作成した topic を Consume する。
+
+```
+kafkacat -C -b YOUR_IP_ADDRESS:31090 -t test-topic
 ```
 
 ## デプロイ：NodPort で外部IPへ公開する場合（GCP推奨）
