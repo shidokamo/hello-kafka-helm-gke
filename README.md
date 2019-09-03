@@ -124,7 +124,8 @@ gcloud compute addresses create YOUR_IP_NAME --region us-central1
 gcloud compute addresses describe YOUR_IP_NAME --region us-central1
 ```
 
-デプロイ
+デプロイする。設定ファイルにIPアドレスを直接書いても良いが、
+埋め込みたくない場合は、以下のようにコマンドラインから指定する。
 ```
 helm install \
   --name my-kafka \
@@ -141,6 +142,12 @@ helm upgrade my-kafka \
   --set external.loadBalancerIP={YOUR_IP_ADDRESS} \
   -f values.yaml \
   incubator/kafka
+```
+
+疎通を確認する。
+
+```
+kafkacat -b YOUR_IP_ADDRESS:31090 -L
 ```
 
 ## デプロイ：NodPort で外部IPへ公開する場合（GCP推奨）
