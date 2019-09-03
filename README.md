@@ -170,7 +170,7 @@ kafkacat -P -b YOUR_IP_ADDRESS:31090 -t test-topic
 kafkacat -C -b YOUR_IP_ADDRESS:31090 -t test-topic
 ```
 
-## デプロイ：NodPort で外部IPへ公開する場合
+## デプロイ：NodPort でクラスタ外IPへ公開する場合
 デプロイする。
 ```
 helm install \
@@ -190,3 +190,5 @@ kubectl describe svc my-kafka-0-external -n kafka
 ```
 kafkacat -b YOUR_ENDPOINT:31090 -L
 ```
+
+あるいは、Node を構成している VM の内部IPを直接取得して接続してもよい。
