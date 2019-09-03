@@ -122,9 +122,22 @@ gcloud compute addresses create YOUR_IP_NAME --region us-central1
 gcloud compute addresses describe YOUR_IP_NAME --region us-central1
 ```
 
-デプロイを更新
+デプロイ
 ```
-helm install my-kafka-lb -f values.yaml --set external.loadBalancerIP=YOUR_IP_ADDRESS incubator/kafka
+helm install \
+  --name my-kafka \
+  --namespace kafka \
+  --set external.l oadBalancerIP={35.194.37.231} \
+  -f values-with-load-balancer.yaml \
+  incubator/kafka
+```
+
+もしくは既存のデプロイを更新する場合は、
+```
+helm upgrade my-kafka \
+  --set external.loadBalancerIP={YOUR_IP_ADDRESS} \
+  -f values.yaml \
+  incubator/kafka
 ```
 
 ## デプロイ：NodPort で外部IPへ公開する場合（GCP推奨）
