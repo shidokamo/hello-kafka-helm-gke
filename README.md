@@ -171,6 +171,15 @@ kafkacat -C -b YOUR_IP_ADDRESS:31090 -t test-topic
 ```
 
 ## デプロイ：NodPort でクラスタ外IPへ公開する場合
+まず、クラスタのどれかのノードのIPアドレスを調べます。
+どのノードの IP アドレスでも構いません。その後、設定ファイルの以下の項目の
+YOUR_NODE_IP をノードの IP アドレスで置き換えます。
+
+```
+"advertised.listeners": EXTERNAL://YOUR_NODE_IP:$((31090 + ${KAFKA_BROKER_ID}))
+```
+
+
 デプロイする。
 ```
 helm install \
@@ -180,15 +189,28 @@ helm install \
   incubator/kafka
 ```
 
-NodePort のエントリポイントを調べる。
+テスト。
+
+```
+kafkacat -b YOUR_NODE_IP:31090 -L
+kafkacat -b YOUR_NODE_IP:31090 -P -t test
+```
+
+この後、Publish を行ってみてください。もし、`advertised.listener` の設定が
+間違っている場合、DNS の名前解決が失敗します。
+
+NodePort のエントリポイント IP を使うことも可能ですが、helm install 後に
+しか IP アドレスがわからないので、設定ファイルに書くことができません。
+
 ```
 kubectl describe svc my-kafka-0-external -n kafka
 ```
 
-この中で EndPoints の情報を調べて、以下のようにテスト
+この中で EndPoints の情報を調べて、以下のようにテストすることはできます。
 
 ```
 kafkacat -b YOUR_ENDPOINT:31090 -L
+kafkacat -b YOUR_ENDPOINT:31090 -P -t test
 ```
 
-あるいは、Node を構成している VM の内部IPを直接取得して接続してもよい。
+どちらでも動くことを確認してください。
